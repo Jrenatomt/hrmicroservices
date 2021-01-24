@@ -2,13 +2,11 @@ package com.renato.wrworker.services;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.renato.wrworker.dto.WorkerDTO;
 import com.renato.wrworker.entities.Worker;
 import com.renato.wrworker.repositories.WorkerRepository;
 import com.renato.wrworker.services.exception.ResourceNotFoundException;
@@ -20,23 +18,23 @@ public class WorkerService {
 	private WorkerRepository repository;
 	
 	@Transactional(readOnly = true)
-	public WorkerDTO findById(Long id) {
+	public Worker findById(Long id) {
 		Optional<Worker> obj = repository.findById(id);
 		Worker entity = obj.orElseThrow(() -> new ResourceNotFoundException("Worker Not Found"));
-		return new WorkerDTO(entity);
+		return entity;
 	}
 	
 	@Transactional(readOnly = true)
-	public List<WorkerDTO> findAll() {
+	public List<Worker> findAll() {
 		List<Worker> list = repository.findAll();
-		return list.stream().map(x -> new WorkerDTO(x)).collect(Collectors.toList());
+		return list;
 	}
 	
-	public WorkerDTO insert(WorkerDTO dto) {
+	public Worker insert(Worker worker) {
 		Worker obj = new Worker();
-		obj.setName(dto.getName());
-		obj.setDailyIncome(dto.getDailyIncome());
+		obj.setName(worker.getName());
+		obj.setDailyIncome(worker.getDailyIncome());
 		obj = repository.save(obj);
-		return new WorkerDTO(obj);
+		return obj;
 	}
 }
